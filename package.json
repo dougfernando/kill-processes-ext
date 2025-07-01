@@ -1,7 +1,7 @@
 {
     "$schema": "https://www.raycast.com/schemas/extension.json",
     "name": "kill-processes-ext",
-    "title": "Kill processes extension",
+    "title": "Kill processes",
     "description": "Search processes being executed and let you kill them",
     "icon": "icon.png",
     "author": "dfs",

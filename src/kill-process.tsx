@@ -13,32 +13,23 @@ interface ProcessInfo {
 
 // Fetches the complete list of running processes from Windows.
 async function fetchAllProcesses(): Promise<ProcessInfo[]> {
-    try {
-        const command = 'tasklist /nh /fo csv';
-        const { stdout } = await execAsync(command);
+    const command = "tasklist /nh /fo csv";
+    const { stdout } = await execAsync(command);
 
-        // Parse the CSV output from tasklist
-        const processes: ProcessInfo[] = stdout
-            .trim()
-            .split(/\r?\n/)
-            .map(line => {
-                const parts = line.replace(/"/g, '').split(',');
-                return {
-                    name: parts[0],
-                    pid: parts[1],
-                };
-            })
-            .filter(p => p.name && p.pid); // Ensure both name and PID are valid
+    // Parse the CSV output from tasklist
+    const processes: ProcessInfo[] = stdout
+        .trim()
+        .split(/\r?\n/)
+        .map((line) => {
+            const parts = line.replace(/"/g, "").split(",");
+            return {
+                name: parts[0],
+                pid: parts[1],
+            };
+        })
+        .filter((p) => p.name && p.pid); // Ensure both name and PID are valid
 
-        return processes;
-    } catch (error) {
-        await showToast({
-            style: Toast.Style.Failure,
-            title: "Error Fetching Processes",
-            message: error instanceof Error ? error.message : "An unknown error occurred",
-        });
-        return []; // Return empty array on error
-    }
+    return processes;
 }
 
 export default function Command() {
@@ -47,10 +38,27 @@ export default function Command() {
 
     // Function to load or reload the process list
     const loadProcesses = async () => {
-        setIsLoading(true);
-        const fetchedProcesses = await fetchAllProcesses();
-        setProcesses(fetchedProcesses);
-        setIsLoading(false);
+        const toast = await showToast({
+            style: Toast.Style.Animated,
+            title: "Processes being loaded...",
+        });
+
+        try {
+            setIsLoading(true);
+            const fetchedProcesses = await fetchAllProcesses();
+            setProcesses(fetchedProcesses);
+
+            toast.style = Toast.Style.Success;
+            toast.title = "Processes Loaded";
+            toast.message = `Found ${fetchedProcesses.length} processes.`;
+
+        } catch (error) {
+            toast.style = Toast.Style.Failure;
+            toast.title = "Error Fetching Processes";
+            toast.message = error instanceof Error ? error.message : "An unknown error occurred";
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // useEffect with an empty dependency array runs only once on mount
@@ -100,12 +108,9 @@ export default function Command() {
     };
 
     return (
-        <List
-            isLoading={isLoading}
-            searchBarPlaceholder="Filter running processes..."
-        >
+        <List isLoading={isLoading} searchBarPlaceholder="Filter running processes...">
             {processes.length > 0 ? (
-                processes.map(proc => (
+                processes.map((proc) => (
                     <List.Item
                         key={proc.pid}
                         title={proc.name}
@@ -120,7 +125,7 @@ export default function Command() {
                                     shortcut={{ modifiers: ["cmd"], key: "k" }}
                                 />
                                 <Action
-                                    title={`Kill All "${proc.name}"`}
+                                    title={`Kill All "${proc.name}" instances`}
                                     icon={Icon.Trash}
                                     style={Action.Style.Destructive}
                                     onAction={() => handleKillAllByName(proc.name)}
