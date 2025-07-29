@@ -1,9 +1,10 @@
 {
     "$schema": "https://www.raycast.com/schemas/extension.json",
     "name": "kill-processes-ext",
-    "title": "Kill processes",
+    "title": "Kill Processes",
     "description": "Search processes being executed and let you kill them",
-    "icon": "icon.png",
+    "version": "2.0.1",
+    "icon": "extension_icon.png",
     "author": "dfs",
     "categories": [
         "Developer Tools"
@@ -15,7 +16,7 @@
     "commands": [
         {
             "name": "kill-process",
-            "title": "Search processes to kill",
+            "title": "Search Processes to Kill",
             "description": "Search processes being executed and let you kill them",
             "mode": "view"
         }
@@ -24,6 +25,7 @@
         {
             "name": "emptyStart",
             "title": "Should start with empty list?",
+            "label": "Start with empty list",
             "description": "Decides if the search should start with an empty list or not",
             "type": "checkbox",
             "required": false,
