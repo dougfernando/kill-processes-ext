@@ -73,8 +73,6 @@ A powerful Raycast extension for Windows that allows you to search, monitor, and
 ## Credits & References
 
 This extension builds upon the original work from:
-- **Original Extension**: [kill-processes-ext](https://github.com/dougfernando/kill-processes-ext) by dougfernando
-- **Additional References**: 
   - [windows-terminal](https://github.com/PuttTim/windows-terminal) by PuttTim
   - [everything-raycast-extension](https://github.com/dougfernando/everything-raycast-extension) by dougfernando
 
