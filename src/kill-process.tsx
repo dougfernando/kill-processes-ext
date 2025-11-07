@@ -79,6 +79,7 @@ function getProcessIcon(processName: string): string {
     if (name.includes('systemsettings')) return Icon.Gear;
     if (name.includes('powertoys')) return Icon.WrenchScrewdriver;
     if (name.includes('raycast')) return Icon.RaycastLogoNeg;
+    if (name.includes('everything64')) return Icon.MagnifyingGlass;
     if (name.includes('task')) return Icon.Cog;
     if (name.includes('service') || name.includes('svc')) return Icon.Gear;
 
