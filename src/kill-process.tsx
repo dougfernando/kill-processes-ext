@@ -58,7 +58,7 @@ function getProcessIcon(processName: string): string {
     // Office
     if (name.includes('word') || name.includes('winword')) return Icon.Document;
     if (name.includes('excel')) return Icon.BarChart;
-    if (name.includes('powerpoint') || name.includes('powerpnt')) return Icon.Presentation;
+    if (name.includes('powerpoint') || name.includes('powerpnt')) return Icon.Snippets;
     if (name.includes('outlook')) return Icon.Envelope;
     if (name.includes('notepad')) return Icon.Document;
     
