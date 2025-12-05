@@ -31,11 +31,15 @@ function getProcessIcon(processName: string): string {
     if (name.includes('edge') || name.includes('msedge')) return Icon.Globe;
     if (name.includes('opera')) return Icon.Globe;
     if (name.includes('brave')) return Icon.Globe;
+    if (name.includes('zen')) return Icon.Globe;
+    if (name.includes('vivaldi')) return Icon.Globe;
+    if (name.includes('comet')) return Icon.Globe;
     
     // Communication
     if (name.includes('discord')) return Icon.Message;
     if (name.includes('teams')) return Icon.Message;
     if (name.includes('slack')) return Icon.Message;
+    if (name.includes('whatsapp')) return Icon.Message;
     if (name.includes('zoom')) return Icon.Video;
     if (name.includes('skype')) return Icon.Video;
     
@@ -45,12 +49,15 @@ function getProcessIcon(processName: string): string {
     if (name.includes('git')) return Icon.Code;
     if (name.includes('node')) return Icon.Code;
     if (name.includes('python')) return Icon.Code;
+    if (name.includes('notepad++')) return Icon.TextInput;
+    if (name.includes('sublime_text')) return Icon.TextInput;
     
     // Media
     if (name.includes('spotify')) return Icon.Music;
     if (name.includes('vlc')) return Icon.Play;
+    if (name.includes('photoshop')) return Icon.EditShape;
     if (name.includes('media')) return Icon.Play;
-    
+
     // Gaming
     if (name.includes('steam')) return Icon.GameController;
     if (name.includes('game')) return Icon.GameController;
@@ -58,16 +65,24 @@ function getProcessIcon(processName: string): string {
     // Office
     if (name.includes('word') || name.includes('winword')) return Icon.Document;
     if (name.includes('excel')) return Icon.BarChart;
-    if (name.includes('powerpoint') || name.includes('powerpnt')) return Icon.Snippets;
+    if (name.includes('powerpoint') || name.includes('powerpnt')) return Icon.LineChart;
     if (name.includes('outlook')) return Icon.Envelope;
-    if (name.includes('notepad')) return Icon.Document;
-    
+    if (name.includes('notepad')) return Icon.Pencil;
+    if (name.includes('onedrive')) return Icon.Cloud;
+    if (name.includes('notion')) return Icon.Document;
+    if (name.includes('obsidian')) return Icon.Pencil;
+
     // System
     if (name.includes('explorer')) return Icon.Folder;
-    if (name.includes('cmd') || name.includes('powershell')) return Icon.Terminal;
+    if (name.includes('cmd') || name.includes('powershell') || name.includes('pwsh')) return Icon.Terminal;
+    if (name.includes('terminal')) return Icon.Terminal;
+    if (name.includes('systemsettings')) return Icon.Gear;
+    if (name.includes('powertoys')) return Icon.WrenchScrewdriver;
+    if (name.includes('raycast')) return Icon.RaycastLogoNeg;
+    if (name.includes('everything64')) return Icon.MagnifyingGlass;
     if (name.includes('task')) return Icon.Cog;
-    if (name.includes('service')) return Icon.Gear;
-    
+    if (name.includes('service') || name.includes('svc')) return Icon.Gear;
+
     // Default icons
     if (name.includes('.exe')) return Icon.Desktop;
     return Icon.Cog;
