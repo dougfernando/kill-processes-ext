@@ -75,31 +75,31 @@ function getProcessIcon(processName: string): string {
 
 // Fetches the complete list of running processes from Windows.
 async function fetchAllProcesses(): Promise<ProcessInfo[]> {
-    // Use wmic to get memory information
-    const command = 'wmic process get Name,ProcessId,WorkingSetSize /format:csv';
-    const { stdout } = await execAsync(command);
+    // Use PowerShell Get-Process (modern alternative to deprecated wmic)
+    const command = 'powershell -Command "Get-Process | Where-Object {$_.ProcessName -ne $null} | Select-Object ProcessName, Id, @{Name=\'WorkingSet64\';Expression={$_.WorkingSet64}}, @{Name=\'CPU\';Expression={$_.CPU}} | ConvertTo-Json"';
+    const { stdout } = await execAsync(command, { maxBuffer: 10 * 1024 * 1024 }); // 10MB buffer for large output
 
-    // Parse the CSV output from wmic
-    const lines = stdout.trim().split(/\r?\n/).slice(1); // Skip header
+    // Parse the JSON output from PowerShell
+    const rawData = JSON.parse(stdout);
+    const processArray = Array.isArray(rawData) ? rawData : [rawData];
     const processes: ProcessInfo[] = [];
 
-    for (const line of lines) {
-        const parts = line.split(',');
-        if (parts.length >= 4 && parts[1] && parts[2] && parts[3]) {
-            const name = parts[1].trim();
-            const pid = parts[2].trim();
-            const workingSetSize = parts[3].trim();
-            
-            
-            if (name && pid && workingSetSize && workingSetSize !== "0" && !isNaN(parseInt(workingSetSize))) {
+    for (const proc of processArray) {
+        if (proc.ProcessName && proc.Id && proc.WorkingSet64) {
+            const name = proc.ProcessName;
+            const pid = proc.Id.toString();
+            const workingSetSize = proc.WorkingSet64;
+
+            if (name && pid && workingSetSize && workingSetSize > 0) {
                 // Convert memory from bytes to MB
-                const memoryMB = Math.round(parseInt(workingSetSize) / 1024 / 1024);
-                
-                // For now, CPU usage will be simulated (Windows CPU monitoring is complex)
-                const cpuPercent = Math.random() * 10; // Placeholder - real CPU monitoring requires continuous sampling
-                
+                const memoryMB = Math.round(workingSetSize / 1024 / 1024);
+
+                // Use actual CPU time from PowerShell (in seconds)
+                const cpuSeconds = proc.CPU || 0;
+                const cpuPercent = Math.min(cpuSeconds / 10, 100); // Rough estimate
+
                 processes.push({
-                    name,
+                    name: name + '.exe', // Add .exe extension for consistency with taskkill
                     pid,
                     memoryUsage: `${memoryMB} MB`,
                     cpuUsage: `${cpuPercent.toFixed(1)}%`,

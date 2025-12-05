@@ -5,6 +5,24 @@ All notable changes to the Kill Processes extension will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2025-12-04
+
+### 🔧 Fixed
+
+#### **Windows Compatibility**
+- 🔧 **Deprecated WMIC Command**: Replaced deprecated `wmic` command with modern PowerShell `Get-Process`
+- ⚡ **Modern Windows Support**: Extension now works on Windows 11 and latest Windows 10 versions where `wmic` has been removed
+- 📊 **Improved Data Accuracy**: PowerShell provides more reliable process information with JSON output format
+- 🖥️ **Better CPU Metrics**: Real CPU time data from PowerShell instead of simulated values
+
+### 🔄 Technical Changes
+- **Command Migration**: Switched from `wmic process get Name,ProcessId,WorkingSetSize` to PowerShell's `Get-Process`
+- **Output Format**: Changed from CSV parsing to JSON parsing for better reliability
+- **Buffer Size**: Increased output buffer to 10MB to handle systems with many processes
+- **Error Handling**: Enhanced error handling for PowerShell command execution
+
+---
+
 ## [2.0.1] - 2025-07-29
 
 ### 🐛 Bug Fixes
