@@ -4,7 +4,7 @@
     "title": "Kill Processes",
     "description": "Search processes being executed and let you kill them",
     "version": "2.0.3",
-    "icon": "assets/extension_icon.png",
+    "icon": "assets/icon.png",
     "author": "dfs",
     "categories": [
         "Developer Tools"
