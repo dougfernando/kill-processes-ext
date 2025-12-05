@@ -5,6 +5,45 @@ All notable changes to the Kill Processes extension will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2025-12-04
+
+### 🎨 Fixed
+
+#### **Extension Icon**
+- 🎨 **Icon Display**: Updated extension icon to new design for better visibility in Raycast interface
+- 🔧 **Icon Rendering**: Replaced icon file to ensure proper display across all Raycast themes
+- 📁 **Icon Location**: Moved icon to root directory (`icon.png`) for proper Raycast detection
+- ✅ **Path Configuration**: Updated package.json to reference `"icon": "icon.png"` instead of `"icon": "assets/icon.png"`
+- 🔍 **Icon Now Visible**: Icon now properly displays in Raycast interface after path adjustments
+
+### 🐛 Fixed
+
+#### **TypeScript Compilation**
+- 🔧 **Icon.Presentation Error**: Fixed TypeScript compilation error caused by non-existent `Icon.Presentation`
+- ✅ **Build Success**: Replaced with `Icon.Snippets` for PowerPoint process icon, ensuring extension builds successfully
+- 🚀 **Extension Loading**: Compilation fix resolves issue where extension and icon wouldn't load in Raycast
+- 🏗️ **Clean Build**: Extension now compiles without errors and loads properly in Raycast
+
+---
+
+## [2.0.2] - 2025-12-04
+
+### 🔧 Fixed
+
+#### **Windows Compatibility**
+- 🔧 **Deprecated WMIC Command**: Replaced deprecated `wmic` command with modern PowerShell `Get-Process`
+- ⚡ **Modern Windows Support**: Extension now works on Windows 11 and latest Windows 10 versions where `wmic` has been removed
+- 📊 **Improved Data Accuracy**: PowerShell provides more reliable process information with JSON output format
+- 🖥️ **Better CPU Metrics**: Real CPU time data from PowerShell instead of simulated values
+
+### 🔄 Technical Changes
+- **Command Migration**: Switched from `wmic process get Name,ProcessId,WorkingSetSize` to PowerShell's `Get-Process`
+- **Output Format**: Changed from CSV parsing to JSON parsing for better reliability
+- **Buffer Size**: Increased output buffer to 10MB to handle systems with many processes
+- **Error Handling**: Enhanced error handling for PowerShell command execution
+
+---
+
 ## [2.0.1] - 2025-07-29
 
 ### 🐛 Bug Fixes

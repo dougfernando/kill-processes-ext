@@ -3,8 +3,8 @@
     "name": "kill-processes-ext",
     "title": "Kill Processes",
     "description": "Search processes being executed and let you kill them",
-    "version": "2.0.1",
-    "icon": "extension_icon.png",
+    "version": "2.0.3",
+    "icon": "icon.png",
     "author": "dfs",
     "categories": [
         "Developer Tools"
