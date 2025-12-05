@@ -1,9 +1,10 @@
 import { Action, ActionPanel, Icon, List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { exec } from "child_process";
+import { exec, execFile } from "child_process";
 import { promisify } from "util";
 
 const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 // Interface for storing process information
 interface ProcessInfo {
@@ -90,27 +91,34 @@ function getProcessIcon(processName: string): string {
 
 // Fetches the complete list of running processes from Windows.
 async function fetchAllProcesses(): Promise<ProcessInfo[]> {
-    // Use PowerShell Get-Process (modern alternative to deprecated wmic)
-    const command = 'powershell -Command "Get-Process | Where-Object {$_.ProcessName -ne $null} | Select-Object ProcessName, Id, @{Name=\'WorkingSet64\';Expression={$_.WorkingSet64}}, @{Name=\'CPU\';Expression={$_.CPU}} | ConvertTo-Json"';
-    const { stdout } = await execAsync(command, { maxBuffer: 10 * 1024 * 1024 }); // 10MB buffer for large output
+    // Use execFile to spawn powershell directly, avoiding cmd.exe overhead
+    // Use manual string formatting to avoid ConvertTo-Json overhead
+    const args = [
+        '-NoProfile',
+        '-NonInteractive',
+        '-Command',
+        'Get-Process | Where-Object {$_.ProcessName} | ForEach-Object { $_.ProcessName + "|" + $_.Id + "|" + $_.WorkingSet64 + "|" + $_.CPU }'
+    ];
 
-    // Parse the JSON output from PowerShell
-    const rawData = JSON.parse(stdout);
-    const processArray = Array.isArray(rawData) ? rawData : [rawData];
+    const { stdout } = await execFileAsync('powershell', args, { maxBuffer: 10 * 1024 * 1024 });
+
     const processes: ProcessInfo[] = [];
+    const lines = stdout.split('\n');
 
-    for (const proc of processArray) {
-        if (proc.ProcessName && proc.Id && proc.WorkingSet64) {
-            const name = proc.ProcessName;
-            const pid = proc.Id.toString();
-            const workingSetSize = proc.WorkingSet64;
+    for (const line of lines) {
+        const parts = line.trim().split('|');
+        if (parts.length === 4) {
+            const [name, pidStr, memoryStr, cpuStr] = parts;
+            const pid = pidStr;
+            const workingSetSize = parseInt(memoryStr, 10);
 
-            if (name && pid && workingSetSize && workingSetSize > 0) {
+            if (name && pid && !isNaN(workingSetSize) && workingSetSize > 0) {
                 // Convert memory from bytes to MB
                 const memoryMB = Math.round(workingSetSize / 1024 / 1024);
 
                 // Use actual CPU time from PowerShell (in seconds)
-                const cpuSeconds = proc.CPU || 0;
+                // Handle empty string or null for CPU
+                const cpuSeconds = cpuStr ? parseFloat(cpuStr) : 0;
                 const cpuPercent = Math.min(cpuSeconds / 10, 100); // Rough estimate
 
                 processes.push({
